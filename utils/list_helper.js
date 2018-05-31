@@ -36,7 +36,7 @@ const mostBlogs = (blogs) => {
   let alreadyFound = []
 
   let authorsOfEachPost = blogs.map(b => b.author)
-  console.log(authorsOfEachPost)
+  //console.log(authorsOfEachPost)
 
   authorsOfEachPost.forEach(a => {
     if (counts[a]) {
@@ -57,7 +57,9 @@ const mostBlogs = (blogs) => {
   })
 
   console.log(mostProlific)
-  return mostProlific
+  let objec = { [mostProlific]: counts[mostProlific] }
+  console.log(objec)
+  return objec
 }
 
 /*

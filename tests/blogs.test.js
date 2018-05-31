@@ -189,7 +189,7 @@ describe('most prolific author', () => {
 
   test('Testing for the most liked author', () => {
     const result = listHelper.mostBlogs(blogs)
-    expect(result).toEqual('Robert C. Martin')
+    expect(result).toEqual({ 'Robert C. Martin': 3 })
   })
 })
 /*
