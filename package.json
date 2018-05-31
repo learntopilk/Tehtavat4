@@ -4,7 +4,7 @@
   "description": "full stack open tasks 4",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "jest --verbose ",
     "watch": "nodemon index.js",
     "lint": "eslint ."
   },
