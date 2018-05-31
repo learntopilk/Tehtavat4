@@ -30,7 +30,35 @@ const favoriteBlog = (blogs) => {
   return mostLikedBlog
 }
 
+const mostBlogs = (blogs) => {
+
+  let counts = {}
+  let alreadyFound = []
+
+  let authorsOfEachPost = blogs.map(b => b.author)
+  console.log(authorsOfEachPost)
+
+  authorsOfEachPost.forEach(a => {
+    if (counts[a]) {
+      counts[a]++
+    } else {
+      counts[a] = 1
+      alreadyFound.push(a)
+    }
+  })
+
+  let mostLikes = 0
+  let mostLiked
+  Object.keys(counts).forEach(key => {
+    if (counts[key] > mostLikes) {
+      mostLiked = key
+    }
+  })
+  console.log(mostLiked)
+  return mostLiked
+}
+
 
 module.exports = {
-  dummy, totalLikes, favoriteBlog
+  dummy, totalLikes, favoriteBlog, mostBlogs
 }
