@@ -47,18 +47,27 @@ const mostBlogs = (blogs) => {
     }
   })
 
-  let mostLikes = 0
-  let mostLiked
+  let mostBlogs = 0
+  let mostProlific
   Object.keys(counts).forEach(key => {
-    if (counts[key] > mostLikes) {
-      mostLiked = key
+    if (counts[key] > mostBlogs) {
+      mostProlific = key
+      mostBlogs = counts[key]
     }
   })
-  console.log(mostLiked)
-  return mostLiked
+
+  console.log(mostProlific)
+  return mostProlific
 }
+
+/*
+const mostLikes = (blogs) => {
+  let mostLiked
+
+  return mostLiked
+}*/
 
 
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs
+  dummy, totalLikes, favoriteBlog, mostBlogs//, mostLikes
 }
