@@ -16,7 +16,6 @@ beforeAll(async () => {
   
   const blogObjs = initialBlogs.map(b => new Blog(b))
   await Promise.all(blogObjs.map(b => b.save()))
-  console.log('blogs: ', await blogsInDb())
 })
 
 test('blogs are returned as json', async () => {
@@ -81,6 +80,7 @@ test('POST to /api/blogs with no likes set receives likes = 0', async () => {
     .post('/api/blogs')
     .send(b)
     .expect(201)
+    .expect('Content-Type', /application\/json/)
 
   expect(goodRes.body.likes).toBe(0)
   const currentBlogs = await blogsInDb()
@@ -108,9 +108,8 @@ test('BAD REQUEST returned with POST call if url and title not supplied', async 
 
 })
 
-test.only('Delete operation succeeds', async () => {
+test('Delete operation succeeds', async () => {
   const blogsPreviously = await blogsInDb()
-  console.log(blogsPreviously)
   const idOfLastPost = blogsPreviously[(blogsPreviously.length - 1)].id
 
   const res = await api
@@ -121,6 +120,24 @@ test.only('Delete operation succeeds', async () => {
   expect(currentBlogs.length).toBe(blogsPreviously.length - 1)
 })
 
+test('PUT operation succeeds', async () => {
+  const blogsPreviously = await blogsInDb()
+  const idOfLastPost = blogsPreviously[(blogsPreviously.length - 1)].id
+  let updatedBlog = new Blog(blogsPreviously[(blogsPreviously.length - 1)])
+  let previousLikes = updatedBlog.likes
+  updatedBlog.likes++
+
+  const res = await api
+    .put(`/api/blogs/${idOfLastPost}`)
+    .send(updatedBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+
+  const currentBlogs = await blogsInDb()
+  expect(currentBlogs.length).toBe(blogsPreviously.length)
+  expect(res.body.likes).toBe(previousLikes + 1)
+})
 
 
 afterAll(() => {
