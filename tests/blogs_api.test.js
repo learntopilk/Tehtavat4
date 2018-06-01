@@ -13,8 +13,10 @@ beforeAll(async () => {
     await blogObj.save()
   })*/
   // ALT-esitys, kurssin mukainen:
+  
   const blogObjs = initialBlogs.map(b => new Blog(b))
-  await Promise.all(blogObjs.map(b => {b.save()}))
+  await Promise.all(blogObjs.map(b => b.save()))
+  console.log('blogs: ', await blogsInDb())
 })
 
 test('blogs are returned as json', async () => {
@@ -105,6 +107,21 @@ test('BAD REQUEST returned with POST call if url and title not supplied', async 
   expect(res.body.length).toBe(blogsPreviously.length)
 
 })
+
+test.only('Delete operation succeeds', async () => {
+  const blogsPreviously = await blogsInDb()
+  console.log(blogsPreviously)
+  const idOfLastPost = blogsPreviously[(blogsPreviously.length - 1)].id
+
+  const res = await api
+    .delete(`/api/blogs/${idOfLastPost}`)
+    .expect(200)
+
+  const currentBlogs = await blogsInDb()
+  expect(currentBlogs.length).toBe(blogsPreviously.length - 1)
+})
+
+
 
 afterAll(() => {
   server.close()

@@ -83,7 +83,7 @@ blogsRouter.delete("/:id", async (request, response) => {
           console.log("err: ", err)
           return response.status(400)
         })
-    response.status(200)
+    response.status(200).end()
     console.log("Deleted")
 })
 
