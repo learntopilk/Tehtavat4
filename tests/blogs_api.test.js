@@ -78,7 +78,7 @@ test('new blog post can be added', async () => {
     'title': 'fresh Post',
     'author': 'prince de Bel Air',
     'url': 'http://localhost:2222',
-    'likes': '680313'
+    'likes': 680313
   }
 
   await api
@@ -91,7 +91,7 @@ test('new blog post can be added', async () => {
   const res = await api
     .get('/api/blogs')
 
-  console.log(res.body)
+ // console.log(res.body)
   const contents = res.body.map(bl => bl.title)
 
   expect(res.body.length).toBe(initialBlogs.length + 1)
@@ -106,6 +106,21 @@ test('blog with no content not added', async () => {
     .post('/api/blogs')
     .send(b)
     .expect(400)
+})
+
+test('POST to /api/blogs with no likes set receives likes = 0', async () => {
+  const b = {
+    'title': 'Sweet Post',
+    'author': 'prince de Bel Air',
+    'url': 'http://localhost:2222'
+  }
+
+  const res = await api
+    .post('/api/blogs')
+    .send(b)
+    .expect(201)
+
+  expect(res.body.likes).toBe(0)
 })
 
 afterAll(() => {

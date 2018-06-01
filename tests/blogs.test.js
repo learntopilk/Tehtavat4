@@ -1,5 +1,5 @@
 const listHelper = require('../utils/list_helper')
-describe.skip('First test suite', () => {
+describe('First test suite', () => {
   test('dummy is called', () => {
     const blogs = []
 
