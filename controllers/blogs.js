@@ -12,11 +12,11 @@ const formatBlogPost = (req) => {
 
 
 
-
 blogsRouter.get('/', (request, response) => {
     Blog
         .find({})
         .then(blogs => {
+            console.log("retrieved blogs from mongodb")
             response.json(blogs)
         })
         .catch(err => {
@@ -42,7 +42,7 @@ blogsRouter.post('/', (request, response) => {
                 response.status(500).json({ error: "something went wrong" })
             })
     } else {
-        response.status(403).json({error: "Bad request"})
+        response.status(400).json({error: "Bad request"})
     }
 
 })

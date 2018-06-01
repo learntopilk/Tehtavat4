@@ -4,8 +4,9 @@
   "description": "full stack open tasks 4",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose ",
-    "watch": "nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose ",
+    "watch": "cross-env NODE_ENV=development nodemon index.js",
     "lint": "eslint ."
   },
   "repository": {
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/learntopilk/Tehtavat4#readme",
   "dependencies": {
+    "babel-eslint": "^8.2.3",
     "cors": "^2.8.4",
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
@@ -30,6 +32,8 @@
     "nodemon": "^1.17.5"
   },
   "devDependencies": {
-    "jest": "^23.1.0"
+    "cross-env": "^5.1.6",
+    "jest": "^23.1.0",
+    "supertest": "^3.1.0"
   }
 }

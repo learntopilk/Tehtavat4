@@ -6,8 +6,10 @@ module.exports = {
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaVersion": 2017
     },
+    "parser": "babel-eslint",
     "rules": {
         "indent": [
             "error",
