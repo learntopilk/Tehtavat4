@@ -65,7 +65,6 @@ beforeAll(async () => {
 })
 
 test('blogs are returned as json', async () => {
-  console.log('1')
   await api
     .get('/api/blogs')
     .expect(200)
@@ -91,7 +90,6 @@ test('new blog post can be added', async () => {
   const res = await api
     .get('/api/blogs')
 
- // console.log(res.body)
   const contents = res.body.map(bl => bl.title)
 
   expect(res.body.length).toBe(initialBlogs.length + 1)
@@ -123,7 +121,19 @@ test('POST to /api/blogs with no likes set receives likes = 0', async () => {
   expect(res.body.likes).toBe(0)
 })
 
+test('BAD REQUEST returned with POST call if url and title not supplied', async () => {
+  const incompleteBlogPost = {
+    'author': 'Karmiva Burana',
+    'likes': 41620879
+  }
+
+  const res = await api
+    .post('/api/blogs')
+    .send(incompleteBlogPost)
+    .expect(400)
+
+})
+
 afterAll(() => {
-  console.log('2')
   server.close()
 })
