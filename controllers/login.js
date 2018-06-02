@@ -4,6 +4,7 @@ const loginRouter = require('express').Router()
 const User = require('../models/user')
 
 
+
 loginRouter.post('/', async (req, res) => {
 
   const body = req.body
@@ -15,7 +16,7 @@ loginRouter.post('/', async (req, res) => {
     false : await bcrypt.compare(body.password, user.passwordHash)
 
   if (!(user && passwordOK)) {
-    res.status(401).send('Invalid password or username!!!!!!')
+    return res.status(401).send('Invalid password or username!!!!!!')
   }
 
   const jwtBody = {

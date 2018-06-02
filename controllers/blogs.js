@@ -12,7 +12,15 @@ const formatBlogPost = (blog) => {
   }
 }
 
+const tokenDigger = (req) => {
+  const auth = request.get('authorization')
 
+  if (auth && auth.toLowerCase.startsWith('bearer')) {
+    return auth.subString(7)
+  } else {
+    return null
+  }
+}
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -26,6 +34,13 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   let user
+
+  const token = tokenDigger(req)
+  const verifiedToken = jwt.verify(token, process.env.SECRET)
+
+  if (!token || !verifiedToken.id) {
+    return res(401).json({ error: 'Token missing or invalid' })
+  }
 
   if (!request.body.user) {
     console.log('must add user')
