@@ -73,7 +73,16 @@ blogsRouter.post('/', async (request, response) => {
     try {
       const result = await blog.save()
 
-      await User.findByIdAndUpdate(req.body.user._id, { blogs: blogs.concat(result._id) })
+      if (!user.blogs) {
+        user.blogs = []
+      }
+
+      let concated = user.blogs.concat(result._id)
+      console.log(concated)
+      user.blogs = concated
+      await user.save()
+
+      //await User.findByIdAndUpdate(request.body.user._id, { blogs: blogs.concat(result._id) })
 
       response.status(201).json(result)
     } catch (e) {

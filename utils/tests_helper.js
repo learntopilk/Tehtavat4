@@ -55,13 +55,21 @@ const initialBlogs = [
 const formatBlog = (blog) => {
   //const users = usersInDb()
   //const user = users[Math.floor((users.length - 1) * Math.random())]._id
+  let bUser
+  if (!blog.user) {
+    bUser = 0
+  } else {
+    bUser = blog.user
+  }
+
+
   return {
     title: blog.title,
     author: blog.author,
     url: blog.url,
     likes: blog.likes,
     id: blog._id,
-    user: blog.user._id
+    user: bUser
   }
 }
 

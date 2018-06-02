@@ -3,17 +3,11 @@ const { app, server } = require('../index.js')
 const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const { blogsInDb, formatBlog, initialBlogs, usersInDb } = require('../utils/tests_helper.js')
+const { blogsInDb, initialBlogs, usersInDb } = require('../utils/tests_helper.js')
 
 
 beforeAll(async () => {
   await Blog.remove({})
-  /*
-  await initialBlogs.forEach(async (blog) => {
-    let blogObj = new Blog(blog)
-    await blogObj.save()
-  })*/
-  // ALT-esitys, kurssin mukainen:
 
   const blogObjs = initialBlogs.map(b => new Blog(b))
   await Promise.all(blogObjs.map(b => b.save()))
@@ -96,7 +90,7 @@ test('BAD REQUEST returned with POST call if url and title not supplied', async 
     'likes': 41620879
   }
 
-  const badRes = await api
+  await api
     .post('/api/blogs')
     .send(incompleteBlogPost)
     .expect(400)
@@ -113,7 +107,7 @@ test('Delete operation succeeds', async () => {
   const blogsPreviously = await blogsInDb()
   const idOfLastPost = blogsPreviously[(blogsPreviously.length - 1)].id
 
-  const res = await api
+  await api
     .delete(`/api/blogs/${idOfLastPost}`)
     .expect(200)
 
@@ -140,7 +134,7 @@ test('PUT operation succeeds', async () => {
   expect(res.body.likes).toBe(previousLikes + 1)
 })
 
-describe.only('User database tests', async () => {
+describe('User database tests', async () => {
   beforeAll(async () => {
     await User.remove({})
     const newUser = new User({
@@ -162,7 +156,7 @@ describe.only('User database tests', async () => {
       adult: false
     }
 
-    const result = await api
+    await api
       .post('/api/users')
       .send(newUser)
       .expect(200)
@@ -183,7 +177,8 @@ describe.only('User database tests', async () => {
       password: 'no',
       adult: true
     }
-    const result = await api
+
+    await api
       .post('/api/users')
       .send(incompleteUser)
       .expect(400)
@@ -219,12 +214,12 @@ describe.only('User database tests', async () => {
 
 
     const firstUser = {
-        username: 'markip',
-        name: 'Seppo Selkiö',
-        password: 'pwd1',
-        adult: true
-      }
-  
+      username: 'markip',
+      name: 'Seppo Selkiö',
+      password: 'pwd1',
+      adult: true
+    }
+
     await api
       .post('/api/users')
       .send(firstUser)

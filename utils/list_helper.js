@@ -1,6 +1,6 @@
 
 
-const dummy = (blogs) => {
+const dummy = () => {
   // ...
   //console.log('Here be blogs (or frogs?).', blogs)
   return 1
