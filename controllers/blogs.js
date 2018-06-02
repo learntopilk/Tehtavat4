@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const User = require('../models/user')
 const Blog = require('../models/blog')
@@ -13,10 +14,10 @@ const formatBlogPost = (blog) => {
 }
 
 const tokenDigger = (req) => {
-  const auth = request.get('authorization')
-
-  if (auth && auth.toLowerCase.startsWith('bearer')) {
-    return auth.subString(7)
+  const auth = req.get('authorization')
+    console.log(auth)
+  if (auth && auth.toLowerCase().startsWith('bearer')) {
+    return auth.substring(7)
   } else {
     return null
   }
@@ -25,88 +26,71 @@ const tokenDigger = (req) => {
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
-    .populate('user', { name: 1, username: 1, _id: 1 } )
+    .populate('user', { name: 1, username: 1, _id: 1 })
 
   console.log(blogs)
   response.json(blogs.map(b => formatBlogPost(b)))
 
 })
 
-blogsRouter.post('/', async (request, response) => {
-  let user
+blogsRouter.post('/', async (req, res) => {
 
-  const token = tokenDigger(req)
-  const verifiedToken = jwt.verify(token, process.env.SECRET)
+  try {
+    const token = tokenDigger(req)
+    const decoded = jwt.verify(token, process.env.SECRET)
 
-  if (!token || !verifiedToken.id) {
-    return res(401).json({ error: 'Token missing or invalid' })
-  }
-
-  if (!request.body.user) {
-    console.log('must add user')
-    const users = await User.find({})
-    user = users[Math.floor((Math.random() * users.length))]
-    request.body.user = user
-
-  } else {
-    user = await User.find({ _id: request.body.user })
-  }
-
-  if (request.body.title && request.body.author && request.body.url && request.body.likes) {
-
-    console.log('Processing FULL')
-    const blog = new Blog(formatBlogPost(request.body))
-
-    const result = await blog.save()
-      .catch(err => {
-        console.log(err)
-        response.status(500).json({ error: 'something went wrong' })
-      })
-    user.blogs = user.blogs.concat(result._id)
-    await user.save()
-
-    response.status(201).json(result)
-
-  } else if (request.body.title && request.body.url) {
-    let auth
-
-    if (request.body.author) {
-      auth = request.body.author
-    } else {
-      auth = 'unknown'
+    if (!token || !decoded.id) {
+      return res.status(401).send('Invalid or missing token')
     }
 
-    console.log('Processing HALF')
+    if (!req.body.title || !req.body.url) {
+      return res.status(400).send('Missing a title or url')
+    }
+
+    const user = await User.findById(decoded.id)
+
+    if (!user) {
+      return res.status(404).send('User not found!')
+    }
+
+    let author
+    if (!req.body.author || req.body.author === '') {
+      author = 'Unknown'
+    } else {
+      author = req.body.author
+    }
+
+    let likes
+    if (!req.body.likes) {
+      likes = 0
+    } else {
+      likes = req.body.likes
+    }
+
     const blog = new Blog({
-      title: request.body.title,
-      author: auth,
-      url: request.body.url,
-      likes: 0,
-      user: request.body.user._id
+      title: req.body.title,
+      author,
+      url: req.body.url,
+      likes,
+      user: user._id
     })
 
-    try {
-      const result = await blog.save()
-
-      if (!user.blogs) {
-        user.blogs = []
-      }
-
-      let concated = user.blogs.concat(result._id)
-      console.log(concated)
-      user.blogs = concated
-      await user.save()
-
-      //await User.findByIdAndUpdate(request.body.user._id, { blogs: blogs.concat(result._id) })
-
-      response.status(201).json(result)
-    } catch (e) {
-      console.log(e)
-      response.status(500).json({ error: 'something went wrong...' })
+    const result = await blog.save()
+    console.log(user.notes)
+    if (!user.notes) {
+      user.notes = []
     }
+    console.log(user.notes)
 
-  } else {
-    response.status(400).json({ error: 'Bad request' })
+    user.notes = user.notes.concat(result._id)
+    console.log(user.notes)
+
+    await user.save()
+
+    res.json(formatBlogPost(result))
+  } catch (e) {
+    console.log(e)
+    res.status(500).json({ error: 'Something went seriously wrong.' })
   }
 
 })
