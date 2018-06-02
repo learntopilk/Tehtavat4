@@ -6,13 +6,18 @@ const formatUserForExternalDisplay = (user) => {
   return {
     username: user.username,
     name: user.name,
-    adult: user.adult
+    adult: user.adult,
+    blogs: user.blogs
   }
 }
 
 usersRouter.get('/', async (req, res) => {
-  const users  = await User.find({})
-  return users.map(user => formatUserForExternalDisplay(user))
+  const users  = await User
+    .find({})
+    .populate('blogs', { author: 1, title: 1, url: 1 })
+  console.log(users)
+
+  res.json(users.map(user => formatUserForExternalDisplay(user)))
 })
 
 usersRouter.post('/', async (req, res) => {
@@ -24,7 +29,7 @@ usersRouter.post('/', async (req, res) => {
     }
     // Onko käyttäjänimi jo käytössä?
     const compareNames = await User.find({ username: req.body.username })
-    //console.log(compareNames)
+
     if (compareNames.length > 0) {
       return res.status(400).json({ error: 'Username already in use' })
     }
@@ -43,7 +48,8 @@ usersRouter.post('/', async (req, res) => {
       username: req.body.username,
       name: req.body.name,
       passwordHash,
-      adult
+      adult,
+      blogs: []
     })
     console.log('saving...')
     const savedUser = await u.save()
