@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const blogsRouter = require('./controllers/blogs.js')
+const usersRouter = require('./controllers/users')
 //require('dotenv').config()
 const config = require('./utils/config.js')
 
@@ -12,6 +13,7 @@ const config = require('./utils/config.js')
 app.use(cors())
 app.use(bodyParser.json())
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
 
 
 mongoose.connect(config.mongoUrl)

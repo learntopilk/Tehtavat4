@@ -24,6 +24,7 @@
   "homepage": "https://github.com/learntopilk/Tehtavat4#readme",
   "dependencies": {
     "babel-eslint": "^8.2.3",
+    "bcrypt": "^2.0.1",
     "cors": "^2.8.4",
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
