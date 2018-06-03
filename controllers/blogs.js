@@ -13,6 +13,7 @@ const formatBlogPost = (blog) => {
   }
 }
 
+/*
 const tokenDigger = (req) => {
   const auth = req.get('authorization')
   console.log(auth)
@@ -21,7 +22,7 @@ const tokenDigger = (req) => {
   } else {
     return null
   }
-}
+}*/
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -37,7 +38,7 @@ blogsRouter.post('/', async (req, res) => {
 
 
   try {
-    const token = tokenDigger(req)
+    const token = req.body.token //tokenDigger(req)
 
     if (!token) {
       return res.status(400).send({ error: 'No token found in request' })

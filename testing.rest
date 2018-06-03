@@ -5,11 +5,11 @@ GET http://localhost:3004/api/blogs
 
 POST http://localhost:3004/api/blogs
 Content-Type: application/json
-authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZyZWRkaWUyMjIiLCJpZCI6IjViMTJjNWRlYWFjMDE4MzA1ZjY0Y2U0ZCIsImlhdCI6MTUyNzk1OTExNn0.HHgi2cHrXEl79GhaWiTmaBCNofnxYqa4cNnruLG9VOA
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZyZWRkaWUyMjIiLCJpZCI6IjViMTJjNWRlYWFjMDE4MzA1ZjY0Y2U0ZCIsImlhdCI6MTUyODA1MTE4OH0.Q4VCJqqAqIEf8SN_Tyz5iiit-_PYjvXL07LZU20PML4
 
 {
-    "title": "Y Post",
-    "author": "Canis Luplin",
+    "title": "CCC Post",
+    "author": "Menis Mopin",
     "url": "http://localhost:4afdh040"
 }
 
