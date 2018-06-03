@@ -9,7 +9,8 @@ const formatBlogPost = (blog) => {
     author: blog.author,
     url: blog.url,
     likes: blog.likes,
-    user: blog.user
+    user: blog.user,
+    id: blog._id
   }
 }
 
@@ -102,6 +103,35 @@ blogsRouter.post('/', async (req, res) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
+  let token
+  try {
+    token = request.body.token
+    if (!token) {
+      return response.status(403).json({ error: 'No token supplied with request' })
+    }
+  } catch (e) {
+    console.log(e)
+    return response.status(500)
+  }
+
+  const decoded = jwt.verify(token, process.env.SECRET)
+  if (!decoded.id) {
+    return response.status(401).send('Invalid token')
+  }
+
+  const blogToDelete = await Blog.findById(request.params.id)
+
+  if (!blogToDelete || !blogToDelete._id) {
+    return response.status(404).json({ error: 'Not found' })
+  }
+  console.log('check-up: ')
+  console.log(blogToDelete.user)
+  console.log(decoded.id)
+  if (blogToDelete.user.toString() !== decoded.id.toString()) {
+    return response.status(403).send({ error: 'Incorrect user' })
+  }
+
+
   console.log('deleting...')
 
   await Blog.remove({ _id: request.params.id })
