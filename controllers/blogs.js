@@ -15,7 +15,7 @@ const formatBlogPost = (blog) => {
 
 const tokenDigger = (req) => {
   const auth = req.get('authorization')
-    console.log(auth)
+  console.log(auth)
   if (auth && auth.toLowerCase().startsWith('bearer')) {
     return auth.substring(7)
   } else {
@@ -35,8 +35,13 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (req, res) => {
 
+
   try {
     const token = tokenDigger(req)
+
+    if (!token) {
+      return res.status(400).send({ error: 'No token found in request' })
+    }
     const decoded = jwt.verify(token, process.env.SECRET)
 
     if (!token || !decoded.id) {
