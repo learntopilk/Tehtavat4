@@ -1,6 +1,7 @@
 const tokenDigger = (req, res, next) => {
 
   const tokenHeader = req.get('authorization')
+  console.log(req.headers)
   console.log('auth: ', tokenHeader)
 
   if (tokenHeader && tokenHeader.toLowerCase().startsWith('bearer')) {
